@@ -1,6 +1,16 @@
-# Requisito 7
+from tech_news.database import db
+import re
+
+
 def search_by_title(title):
-    """Seu código deve vir aqui"""
+    insensitive_pattern = re.compile(title, re.IGNORECASE)
+
+    news_list = [
+        (news["title"], news["url"])
+        for news in db.news.find({"title": insensitive_pattern})
+    ]
+
+    return news_list
 
 
 # Requisito 8
