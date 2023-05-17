@@ -14,21 +14,27 @@ def search_by_title(title):
     return news_list
 
 
-def search_by_date(date):
+def convert_date(date_string):
     try:
-        formated_date = (
+        formatted_date = (
             datetime
-            .strptime(date, "%Y-%m-%d")  # converts string to date
+            .strptime(date_string, "%Y-%m-%d")  # converts string to date
             .strftime("%d/%m/%Y")  # convert date to format dd/mm/AAAA
         )
+        return formatted_date
     except ValueError:
         raise ValueError("Data inválida")
-    else:
-        news_list = [
-            (news["title"], news["url"])
-            for news in db.news.find({"timestamp": formated_date})
-        ]
-        return news_list
+
+
+def search_by_date(date):
+    formatted_date = convert_date(date)
+
+    news_list = [
+        (news["title"], news["url"])
+        for news in db.news.find({"timestamp": formatted_date})
+    ]
+
+    return news_list
 
 
 # Requisito 9
