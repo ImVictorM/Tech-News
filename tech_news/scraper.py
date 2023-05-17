@@ -56,23 +56,36 @@ def scrape_news(html_content):
     }
 
 
-def get_tech_news(amount):
-    endpoint = "https://blog.betrybe.com/"
-    home_html = fetch(endpoint)
+def extract_links_to_scrape(amount):
+    home_endpoint = "https://blog.betrybe.com/"
+    home_html = fetch(home_endpoint)
     main_page_content = scrape_updates(home_html)
+
     links_to_scrape = []
     links_to_scrape.extend(main_page_content[:amount])
-
     next_page_link = scrape_next_page_link(home_html)
+
     while len(links_to_scrape) < amount:
         next_page_content = fetch(next_page_link)
         links_to_scrape.extend(scrape_updates(next_page_content))
         next_page_link = scrape_next_page_link(next_page_content)
 
+    return links_to_scrape[:amount]
+
+
+def scrape_multiple_links(links_to_scrape):
     scraped_content = []
-    for link in links_to_scrape[:amount]:
+
+    for link in links_to_scrape:
         html = fetch(link)
         scraped_content.append(scrape_news(html))
+
+    return scraped_content
+
+
+def get_tech_news(amount):
+    links_to_scrape = extract_links_to_scrape(amount)
+    scraped_content = scrape_multiple_links(links_to_scrape)
 
     create_news(scraped_content)
     return scraped_content
