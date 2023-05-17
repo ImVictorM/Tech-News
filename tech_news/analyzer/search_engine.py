@@ -19,7 +19,7 @@ def convert_date(date_string):
         formatted_date = (
             datetime
             .strptime(date_string, "%Y-%m-%d")  # converts string to date
-            .strftime("%d/%m/%Y")  # convert date to format dd/mm/AAAA
+            .strftime("%d/%m/%Y")  # converts date to format dd/mm/AAAA
         )
         return formatted_date
     except ValueError:
@@ -37,6 +37,12 @@ def search_by_date(date):
     return news_list
 
 
-# Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
+    insensitive_pattern = re.compile(category, re.IGNORECASE)
+
+    news_list = [
+        (news["title"], news["url"])
+        for news in db.news.find({"category": insensitive_pattern})
+    ]
+
+    return news_list
