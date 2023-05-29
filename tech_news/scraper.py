@@ -57,12 +57,14 @@ def scrape_news(html_content):
 
 
 def extract_links_to_scrape(amount):
+    amount = int(amount)
     home_endpoint = "https://blog.betrybe.com/"
     home_html = fetch(home_endpoint)
     main_page_content = scrape_updates(home_html)
 
     links_to_scrape = []
     links_to_scrape.extend(main_page_content[:amount])
+
     next_page_link = scrape_next_page_link(home_html)
 
     while len(links_to_scrape) < amount:
